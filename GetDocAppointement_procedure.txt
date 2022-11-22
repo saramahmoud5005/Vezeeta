@@ -1,0 +1,10 @@
+create or replace PROCEDURE GetDocAppointement
+(doc_name in VARCHAR2, doc_appointement out sys_refcursor)
+as
+begin
+
+OPEN doc_appointement FOR
+SELECT da.DAY_TIME FROM doc_appointments  da
+WHERE da.doc_username = doc_name 
+AND da.is_booked = 0;
+end;

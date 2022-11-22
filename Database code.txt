@@ -1,0 +1,150 @@
+--drop table sold_product;
+--drop table Product;
+--drop table booked_appointment;
+--drop table Patient;
+--drop table Doc_Appointments;
+--drop table Appointments;
+--drop table Doctor;
+--drop table Speciality;
+-------------------------------------------------------
+--Speciality
+create table Speciality
+(
+speciality_name VARCHAR2(25) PRIMARY KEY
+);
+INSERT INTO Speciality
+VALUES ('Dentistry');
+INSERT INTO Speciality
+VALUES ('Psychiatry');
+INSERT INTO Speciality
+VALUES ('Dermatology');
+
+select * from speciality;
+
+--Doctor
+create table Doctor
+(
+username VARCHAR2(25) PRIMARY KEY,
+hospital_name VARCHAR2(25),
+hospital_loc VARCHAR2(25),
+phone_num NUMBER(11),
+speciality VARCHAR2(25),
+FOREIGN KEY (speciality)
+  REFERENCES Speciality (speciality_name)
+);
+INSERT INTO Doctor
+VALUES ('Ahmed','Ganzori', 'Masr El gdeda', 01012343455, 'Dentistry');
+INSERT INTO Doctor
+VALUES ('Ali', 'Al nahar', 'Madenet Nasr', 01012666455, 'Dentistry');
+INSERT INTO Doctor
+VALUES ('Mohamed', 'Al nahar', 'Madenet Nasr', 01011343455, 'Psychiatry');
+
+select * from doctor;
+--Appointments
+create table Appointments
+(
+day_time VARCHAR2(25) PRIMARY KEY
+);
+INSERT INTO Appointments
+VALUES ('25/05/2022 01:00 PM'); 
+INSERT INTO Appointments
+VALUES ('15/06/2022 03:30 PM');
+INSERT INTO Appointments
+VALUES ('20/05/2022 10:00 AM');
+
+select * from appointments;
+--Doc_Appointments
+create table Doc_Appointments
+(
+doc_username VARCHAR2(25),
+day_time VARCHAR2(25),
+is_booked NUMBER(1),
+
+FOREIGN KEY (doc_username)
+  REFERENCES Doctor (username),
+FOREIGN KEY (day_time)
+  REFERENCES Appointments (day_time),
+PRIMARY KEY (doc_username, day_time)
+);
+INSERT INTO Doc_Appointments
+VALUES ('Ahmed', '25/05/2022 01:00 PM', 1);
+INSERT INTO Doc_Appointments
+VALUES ('Ahmed', '15/06/2022 03:30 PM', 0);
+INSERT INTO Doc_Appointments
+VALUES ('Ali', '20/05/2022 10:00 AM', 1);
+
+select * from doc_appointments;
+--Patient
+create table Patient
+(
+username VARCHAR2(25) PRIMARY KEY,
+address VARCHAR2(25),
+phone_num NUMBER(11)
+);
+INSERT INTO Patient
+VALUES ('Mostafa', 'Abasya', 01011343499);
+INSERT INTO Patient
+VALUES ('Ahd', 'Faisal', 01019803455);
+
+select * from patient;
+--booked_appointment
+create table booked_appointment
+(
+doc_username VARCHAR2(25),
+day_time VARCHAR2(25),
+patient_username VARCHAR2(25),
+
+FOREIGN KEY (doc_username)
+  REFERENCES Doctor (username),
+FOREIGN KEY (day_time)
+  REFERENCES Appointments (day_time),
+FOREIGN KEY (patient_username)
+  REFERENCES Patient (username),
+  
+PRIMARY KEY (doc_username, day_time, patient_username)
+);
+
+INSERT INTO booked_appointment
+VALUES ('Ahmed', '25/05/2022 01:00 PM', 'Ahd');
+INSERT INTO booked_appointment
+VALUES ('Ali', '20/05/2022 10:00 AM', 'Mostafa');
+
+select * from booked_appointment;
+--Product
+create table Product
+(
+product_name VARCHAR2(25) PRIMARY KEY,
+price NUMBER(10),
+product_type VARCHAR2(25),
+product_count NUMBER(11)
+);
+INSERT INTO Product
+VALUES ('Concor', 50, 'Blood pressure', 100); 
+INSERT INTO Product
+VALUES ('Panadol', 25, 'Painkiller', 250);
+INSERT INTO Product
+VALUES ('Catafst', 20, 'Painkiller', 175);
+
+select * from Product;
+--sold_product
+create table sold_product
+(
+patient_username VARCHAR2(25),
+product_name VARCHAR2(25),
+day_time VARCHAR2(25),
+product_count NUMBER(11),
+
+FOREIGN KEY (patient_username)
+  REFERENCES Patient (username),
+FOREIGN KEY (product_name)
+  REFERENCES Product (product_name),
+PRIMARY KEY (patient_username, product_name, day_time)
+);
+INSERT INTO sold_product
+VALUES ('Mostafa', 'Concor', '20/03/2022 02:15 PM', 2);
+INSERT INTO sold_product
+VALUES ('Mostafa', 'Concor', '05/04/2022 06:20 PM', 1);
+INSERT INTO sold_product
+VALUES ('Ahd', 'Panadol', '05/05/2022 02:45 PM', 1);
+
+select * from sold_product;

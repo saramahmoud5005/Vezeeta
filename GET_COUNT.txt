@@ -1,0 +1,14 @@
+create or replace PROCEDURE GET_COUNT 
+(PName in VARCHAR2,PCount out NUMBER)
+AS
+
+BEGIN
+  
+  SELECT product_count into PCount
+  From product
+  WHERE product_name = pname;
+  
+dbms_output.put_line( PCount); 
+
+
+END GET_COUNT;
